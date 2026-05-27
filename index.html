@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aaron Screws — AI Automation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:      #0f0f0f;
+      --surface: #161616;
+      --border:  #242424;
+      --muted:   #555;
+      --text:    #e8e8e8;
+      --sub:     #999;
+      --accent:  #7c6af7;
+      --accent2: #a78bfa;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Nav ── */
+    nav {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wordmark {
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .wordmark span { color: var(--accent2); }
+    nav a.cta {
+      font-size: 0.85rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: opacity 0.15s;
+    }
+    nav a.cta:hover { opacity: 0.85; text-decoration: none; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 96px 0 80px;
+    }
+    .hero .eyebrow {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent2);
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--sub);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.85; text-decoration: none; }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+      transition: border-color 0.15s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); text-decoration: none; }
+
+    /* ── Section ── */
+    section {
+      padding: 72px 0;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    /* ── What I build ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    .pillar-icon {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    .pillar h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .pillar p {
+      font-size: 0.85rem;
+      color: var(--sub);
+      line-height: 1.5;
+    }
+
+    /* ── Projects ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 16px;
+      transition: border-color 0.15s;
+    }
+    .project-card:hover { border-color: var(--accent); }
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      gap: 16px;
+    }
+    .project-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .badge-live { background: #14532d; color: #4ade80; }
+    .badge-soon { background: #1c1917; color: var(--muted); border: 1px solid var(--border); }
+    .project-card p {
+      font-size: 0.9rem;
+      color: var(--sub);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+    .project-video {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    /* ── How it works ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .step {
+      display: flex;
+      gap: 24px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent2);
+      min-width: 28px;
+      padding-top: 2px;
+      letter-spacing: 0.05em;
+    }
+    .step h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .step p {
+      font-size: 0.875rem;
+      color: var(--sub);
+    }
+
+    /* ── Contact ── */
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+    }
+    .contact-block h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .contact-block p {
+      color: var(--sub);
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+    }
+    .email-link {
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent2);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 14px 28px;
+      border-radius: 8px;
+      transition: border-color 0.15s;
+    }
+    .email-link:hover { border-color: var(--accent2); text-decoration: none; }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .hero { padding: 64px 0 56px; }
+      .contact-block { padding: 28px 20px; }
+      .project-card { padding: 24px; }
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 999;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="container">
+      <span class="wordmark">Aaron <span>Screws</span></span>
+      <a href="#" class="cta" data-copy="aaronscrews@proton.me">aaronscrews@proton.me</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="container">
+    <div class="hero">
+      <p class="eyebrow">AI Automation &amp; Custom Bots</p>
+      <h1>I build AI tools that<br><em>actually ship.</em></h1>
+      <p>Custom automation, Telegram bots, and AI-powered workflows — built fast, delivered with a walkthrough, and yours to keep.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Hire me</a>
+        <a href="https://www.fiverr.com/tripp_tiger" class="btn-secondary" target="_blank" rel="noopener">View Fiverr gig</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- What I build -->
+  <section>
+    <div class="container">
+      <p class="section-label">What I build</p>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">🤖</div>
+          <h3>Telegram Bots</h3>
+          <p>Bots that run as your own account — summaries, alerts, custom commands.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">⚡</div>
+          <h3>AI Automation</h3>
+          <p>Workflows that replace manual, repetitive tasks with AI-powered pipelines.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🔧</div>
+          <h3>Custom Builds</h3>
+          <p>Have a specific problem? Tell me what you need and I'll scope and build it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section>
+    <div class="container">
+      <p class="section-label">Projects</p>
+
+      <div class="project-card">
+        <div class="project-header">
+          <h3>Telegram AI Summarizer</h3>
+          <span class="badge badge-live">Live</span>
+        </div>
+        <p>A userbot that runs as your own Telegram account and summarizes any chat on command — private chats, groups, and channels. Supports custom tone, adjustable message limits, and follow-up Q&amp;A on summaries. Powered by free AI models with no ongoing subscription required.</p>
+        <video class="project-video" controls preload="none" poster="">
+          <source src="telegram-bot-demo.mp4" type="video/mp4">
+        </video>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Telegram API</span>
+          <span class="tag">OpenRouter</span>
+          <span class="tag">LLM</span>
+        </div>
+      </div>
+
+      <!-- Add future projects here -->
+
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section>
+    <div class="container">
+      <p class="section-label">How it works</p>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div>
+            <h4>Tell me what you need</h4>
+            <p>Send me a message describing what you want to automate or build. I'll tell you honestly if it's a good fit.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div>
+            <h4>I build it — fast</h4>
+            <p>Most projects are delivered within 24 hours. You get full source code and own it completely.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div>
+            <h4>We get it running together</h4>
+            <p>A short setup call where I walk you through everything. No technical experience needed on your end.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <div>
+            <h4>It's yours</h4>
+            <p>Your tool, your code, no recurring fees. Need changes later? Just reach out.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-block">
+        <h2>Got something to build?</h2>
+        <p>Describe what you need — I'll scope it and give you a straight answer on timeline and cost.</p>
+        <a href="#" class="email-link" data-copy="aaronscrews@proton.me">aaronscrews@proton.me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 Aaron Screws</p>
+      <p>Built with no fluff.</p>
+    </div>
+  </footer>
+
+  <div id="toast">Email copied!</div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    document.querySelectorAll('[data-copy]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        navigator.clipboard.writeText(el.dataset.copy).then(() => {
+          clearTimeout(toastTimer);
+          toast.classList.add('show');
+          toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
