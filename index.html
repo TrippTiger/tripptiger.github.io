@@ -304,11 +304,164 @@
     }
     footer p { font-size: 0.8rem; color: var(--muted); }
 
+    /* ── Client pipeline ── */
+    .client-pipeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 48px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .cp-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 100px;
+    }
+    .cp-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: border-color 0.15s;
+    }
+    .cp-node:hover .cp-icon { border-color: var(--accent2); }
+    .cp-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .cp-sub {
+      font-size: 0.68rem;
+      color: var(--sub);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .cp-arrow {
+      color: var(--border);
+      font-size: 1rem;
+      flex-shrink: 0;
+      padding: 0 4px;
+      padding-bottom: 28px;
+    }
+
+    /* ── Agent pipeline ── */
+    .pipeline-wrap {
+      position: relative;
+    }
+    .pipeline-nodes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .pipeline-node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 16px;
+      position: relative;
+      transition: border-color 0.15s;
+    }
+    .pipeline-node:hover { border-color: var(--accent); }
+    .pipeline-node::after {
+      content: '→';
+      position: absolute;
+      right: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 0.9rem;
+      z-index: 1;
+    }
+    .pipeline-node:last-child::after { display: none; }
+    .pn-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 6px;
+    }
+    .pn-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .pn-desc {
+      font-size: 0.78rem;
+      color: var(--sub);
+      line-height: 1.5;
+    }
+    .overseer-bar {
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .overseer-bar-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      white-space: nowrap;
+    }
+    .overseer-bar-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .overseer-bar-desc {
+      font-size: 0.78rem;
+      color: var(--sub);
+    }
+    .overseer-connector {
+      display: flex;
+      justify-content: space-around;
+      padding: 0 40px;
+      margin-bottom: 0;
+    }
+    .overseer-tick {
+      width: 1px;
+      height: 16px;
+      background: var(--accent);
+      opacity: 0.4;
+    }
+    .pipeline-tagline {
+      font-size: 0.82rem;
+      color: var(--sub);
+      margin-top: 20px;
+      line-height: 1.6;
+    }
+    .pipeline-tagline span { color: var(--accent2); }
+
     /* ── Responsive ── */
     @media (max-width: 480px) {
       .hero { padding: 64px 0 56px; }
       .contact-block { padding: 28px 20px; }
       .project-card { padding: 24px; }
+      .pipeline-nodes { grid-template-columns: 1fr; }
+      .pipeline-node::after { content: '↓'; right: 50%; top: auto; bottom: -16px; transform: translateX(50%); }
+      .pipeline-node:last-child::after { display: none; }
+      .overseer-connector { display: none; }
+      .cp-node { min-width: 72px; }
+      .cp-label, .cp-sub { white-space: normal; }
     }
 
     /* ── Toast ── */
@@ -413,6 +566,39 @@
   <section>
     <div class="container">
       <p class="section-label">How it works</p>
+
+      <div class="client-pipeline">
+        <div class="cp-node">
+          <div class="cp-icon">💬</div>
+          <div class="cp-label">Describe it</div>
+          <div class="cp-sub">Tell me what you need</div>
+        </div>
+        <div class="cp-arrow">→</div>
+        <div class="cp-node">
+          <div class="cp-icon">📋</div>
+          <div class="cp-label">Scope</div>
+          <div class="cp-sub">We align on the build</div>
+        </div>
+        <div class="cp-arrow">→</div>
+        <div class="cp-node">
+          <div class="cp-icon">⚙️</div>
+          <div class="cp-label">Build</div>
+          <div class="cp-sub">1–5 days turnaround</div>
+        </div>
+        <div class="cp-arrow">→</div>
+        <div class="cp-node">
+          <div class="cp-icon">🤝</div>
+          <div class="cp-label">Setup call</div>
+          <div class="cp-sub">We get it running together</div>
+        </div>
+        <div class="cp-arrow">→</div>
+        <div class="cp-node">
+          <div class="cp-icon">🔑</div>
+          <div class="cp-label">Yours</div>
+          <div class="cp-sub">Full code, no lock-in</div>
+        </div>
+      </div>
+
       <div class="steps">
         <div class="step">
           <span class="step-num">01</span>
@@ -442,6 +628,47 @@
             <p>Your tool, your code, no recurring fees. Need changes later? Just reach out.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Agent Pipeline -->
+  <section>
+    <div class="container">
+      <p class="section-label">Under the hood</p>
+      <div class="pipeline-wrap">
+        <div class="pipeline-nodes">
+          <div class="pipeline-node">
+            <div class="pn-tag">Agent 01</div>
+            <div class="pn-title">Consultant</div>
+            <div class="pn-desc">Scopes every project into a complete build brief. Asks the right questions, flags ambiguity, locks in requirements before anything gets built.</div>
+          </div>
+          <div class="pipeline-node">
+            <div class="pn-tag">Agent 02</div>
+            <div class="pn-title">Planner</div>
+            <div class="pn-desc">Reads the brief and architects a step-by-step build plan — tasks, dependencies, verification steps, and edge cases accounted for before a line is written.</div>
+          </div>
+          <div class="pipeline-node">
+            <div class="pn-tag">Agent 03</div>
+            <div class="pn-title">Builder</div>
+            <div class="pn-desc">Executes the plan task by task. Each step verified before moving to the next. Emits a structured signal when the build is ready for review.</div>
+          </div>
+        </div>
+        <div class="overseer-connector">
+          <div class="overseer-tick"></div>
+          <div class="overseer-tick"></div>
+          <div class="overseer-tick"></div>
+          <div class="overseer-tick"></div>
+          <div class="overseer-tick"></div>
+        </div>
+        <div class="overseer-bar">
+          <div>
+            <div class="overseer-bar-label">Always active</div>
+            <div class="overseer-bar-title">Overseer</div>
+          </div>
+          <div class="overseer-bar-desc">Routes signals between agents, monitors every handoff, reviews each delivery, and logs learnings to a persistent knowledge base that improves future builds.</div>
+        </div>
+        <p class="pipeline-tagline">Built on top of <span>OpenClaw</span> — a custom multi-agent orchestration system running locally. Every project I take on runs through this pipeline automatically.</p>
       </div>
     </div>
   </section>
