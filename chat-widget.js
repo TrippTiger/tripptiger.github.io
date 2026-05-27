@@ -191,9 +191,6 @@
     showTyping();
 
     let fullText = '';
-    let botMsgEl = null;
-    let botBubble = null;
-    let briefDetected = false;
 
     try {
       const response = await fetch(config.workerUrl, {
@@ -202,79 +199,25 @@
         body: JSON.stringify({ messages }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const err = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(err.error || `HTTP ${response.status}`);
+        throw new Error(data.error || `HTTP ${response.status}`);
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
+      fullText = data.text || '';
+      hideTyping();
+      const msgEl = appendMessage('assistant', fullText);
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-
-        // Process complete SSE lines
-        const lines = buffer.split('\n');
-        buffer = lines.pop(); // hold back incomplete line
-
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]' || data === '') continue;
-
-          let parsed;
-          try { parsed = JSON.parse(data); } catch { continue; }
-
-          if (
-            parsed.type === 'content_block_delta' &&
-            parsed.delta?.type === 'text_delta' &&
-            parsed.delta.text
-          ) {
-            const chunk = parsed.delta.text;
-
-            // On first chunk: swap typing indicator for real bubble
-            if (!botMsgEl) {
-              hideTyping();
-              const wrapper = document.createElement('div');
-              wrapper.className = 'bcw-msg bcw-msg-bot';
-              botBubble = document.createElement('div');
-              botBubble.className = 'bcw-bubble';
-              wrapper.appendChild(botBubble);
-              document.getElementById('bcw-messages').appendChild(wrapper);
-              botMsgEl = wrapper;
-            }
-
-            fullText += chunk;
-            botBubble.textContent = fullText;
-            scrollToBottom();
-          }
-
-          // Detect end of message for brief upgrade
-          if (parsed.type === 'message_delta' && parsed.delta?.stop_reason === 'end_turn') {
-            if (isBrief(fullText) && !briefDetected) {
-              briefDetected = true;
-              upgradeToBrief(botMsgEl, botBubble, fullText);
-            }
-          }
-        }
-      }
-
-      // Final check in case stream ended without message_delta
-      if (botMsgEl && isBrief(fullText) && !briefDetected) {
-        upgradeToBrief(botMsgEl, botBubble, fullText);
+      if (isBrief(fullText)) {
+        const bubble = msgEl.querySelector('.bcw-bubble');
+        upgradeToBrief(msgEl, bubble, fullText);
       }
 
     } catch (err) {
       hideTyping();
-      appendMessage(
-        'assistant',
-        "Sorry, I hit a snag connecting to the server. Try refreshing or check back in a moment."
-      );
-      console.error('[BCW] Stream error:', err);
+      appendMessage('assistant', "Sorry, I hit a snag connecting to the server. Try refreshing or check back in a moment.");
+      console.error('[BCW] Error:', err);
     }
 
     // Persist to message history
@@ -345,74 +288,28 @@
     showTyping();
 
     let fullText = '';
-    let botMsgEl = null;
-    let botBubble = null;
 
     try {
-      // Send a hidden "start" message to get the greeting
-      const initMessages = [{ role: 'user', content: 'hi' }];
-
       const response = await fetch(config.workerUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: initMessages }),
+        body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]' || data === '') continue;
-
-          let parsed;
-          try { parsed = JSON.parse(data); } catch { continue; }
-
-          if (
-            parsed.type === 'content_block_delta' &&
-            parsed.delta?.type === 'text_delta' &&
-            parsed.delta.text
-          ) {
-            if (!botMsgEl) {
-              hideTyping();
-              const wrapper = document.createElement('div');
-              wrapper.className = 'bcw-msg bcw-msg-bot';
-              botBubble = document.createElement('div');
-              botBubble.className = 'bcw-bubble';
-              wrapper.appendChild(botBubble);
-              document.getElementById('bcw-messages').appendChild(wrapper);
-              botMsgEl = wrapper;
-            }
-            fullText += parsed.delta.text;
-            botBubble.textContent = fullText;
-            scrollToBottom();
-          }
-        }
-      }
-
-      if (fullText) {
-        // Store as: user sent "hi", bot responded with greeting
-        // But we don't show the "hi" in UI — greeting appears unprompted
-        messages.push({ role: 'user', content: 'hi' });
-        messages.push({ role: 'assistant', content: fullText });
-      }
+      fullText = data.text || '';
+      hideTyping();
+      appendMessage('assistant', fullText);
+      messages.push({ role: 'user', content: 'hi' });
+      messages.push({ role: 'assistant', content: fullText });
 
     } catch (err) {
       hideTyping();
-      appendMessage('assistant', "Hey — I'm here to help you scope out a custom bot. What problem are you trying to solve?");
-      messages.push({ role: 'assistant', content: "Hey — I'm here to help you scope out a custom bot. What problem are you trying to solve?" });
+      const fallback = "Hey — I'm here to help you scope out a custom bot. What problem are you trying to solve?";
+      appendMessage('assistant', fallback);
+      messages.push({ role: 'assistant', content: fallback });
       console.error('[BCW] Greeting error:', err);
     }
 
