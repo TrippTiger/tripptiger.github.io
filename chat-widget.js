@@ -45,6 +45,9 @@
     const root = document.createElement('div');
     root.id = 'bcw-root';
     root.innerHTML = `
+      <!-- Prompt bubble -->
+      <div id="bcw-prompt">Describe your idea → get a real brief, free.</div>
+
       <!-- Launcher button -->
       <button id="bcw-launcher" aria-label="Open bot consultant">
         <div id="bcw-launcher-dot"></div>
@@ -413,7 +416,7 @@
   function openPanel() {
     const root = document.getElementById('bcw-root');
     root.classList.add('bcw-open');
-    document.getElementById('bcw-launcher-dot').style.display = 'none';
+    document.getElementById('bcw-prompt').classList.remove('bcw-prompt-visible');
     panelOpen = true;
 
     if (!hasOpened) {
@@ -465,12 +468,16 @@
       if (panelOpen && !root.contains(e.target)) closePanel();
     });
 
-    // Show notification dot after 8s if not opened yet
+    // Show prompt bubble after 1.5s, dismiss on click
+    const prompt = document.getElementById('bcw-prompt');
     setTimeout(() => {
-      if (!hasOpened) {
-        document.getElementById('bcw-launcher-dot').style.display = 'block';
-      }
-    }, 8000);
+      if (!hasOpened) prompt.classList.add('bcw-prompt-visible');
+    }, 1500);
+
+    prompt.addEventListener('click', () => {
+      prompt.classList.remove('bcw-prompt-visible');
+      openPanel();
+    });
   }
 
   // ─── Init ────────────────────────────────────────────────────────

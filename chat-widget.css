@@ -414,6 +414,54 @@
   fill: #fff;
 }
 
+/* ─── Prompt Bubble ─────────────────────────────────────────────── */
+
+#bcw-prompt {
+  position: absolute;
+  bottom: 8px;
+  right: 68px;
+  background: #fff;
+  color: #1a1d27;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#bcw-prompt.bcw-prompt-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+#bcw-prompt::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  bottom: 10px;
+  border-width: 6px 0 6px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #fff;
+}
+
+@media (max-width: 480px) {
+  #bcw-prompt {
+    font-size: 13px;
+    white-space: normal;
+    max-width: 200px;
+    bottom: 10px;
+  }
+}
+
 /* ─── Mobile ────────────────────────────────────────────────────── */
 
 @media (max-width: 480px) {
