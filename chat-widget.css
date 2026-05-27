@@ -417,9 +417,9 @@
 /* ─── Prompt Bubble ─────────────────────────────────────────────── */
 
 #bcw-prompt {
-  position: absolute;
-  bottom: 8px;
-  right: 68px;
+  position: fixed;
+  bottom: 34px;
+  right: 92px;
   background: #fff;
   color: #1a1d27;
   font-size: 13.5px;
@@ -435,6 +435,7 @@
   transform: translateY(6px);
   pointer-events: none;
   transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 99998;
 }
 
 #bcw-prompt.bcw-prompt-visible {
@@ -458,7 +459,8 @@
     font-size: 13px;
     white-space: normal;
     max-width: 200px;
-    bottom: 10px;
+    right: 84px;
+    bottom: 26px;
   }
 }
 
