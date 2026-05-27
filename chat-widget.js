@@ -193,11 +193,16 @@
     let fullText = '';
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+
       const response = await fetch(config.workerUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
 
       const data = await response.json();
 
@@ -290,11 +295,16 @@
     let fullText = '';
 
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+
       const response = await fetch(config.workerUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
