@@ -226,13 +226,8 @@
           let parsed;
           try { parsed = JSON.parse(data); } catch { continue; }
 
-          if (
-            parsed.type === 'content_block_delta' &&
-            parsed.delta?.type === 'text_delta' &&
-            parsed.delta.text
-          ) {
-            const chunk = parsed.delta.text;
-
+          const chunk = parsed.choices?.[0]?.delta?.content;
+          if (chunk) {
             // On first chunk: swap typing indicator for real bubble
             if (!botMsgEl) {
               hideTyping();
@@ -251,7 +246,7 @@
           }
 
           // Detect end of message for brief upgrade
-          if (parsed.type === 'message_delta' && parsed.delta?.stop_reason === 'end_turn') {
+          if (parsed.choices?.[0]?.finish_reason === 'stop') {
             if (isBrief(fullText) && !briefDetected) {
               briefDetected = true;
               upgradeToBrief(botMsgEl, botBubble, fullText);
@@ -377,11 +372,8 @@
           let parsed;
           try { parsed = JSON.parse(data); } catch { continue; }
 
-          if (
-            parsed.type === 'content_block_delta' &&
-            parsed.delta?.type === 'text_delta' &&
-            parsed.delta.text
-          ) {
+          const chunk = parsed.choices?.[0]?.delta?.content;
+          if (chunk) {
             if (!botMsgEl) {
               hideTyping();
               const wrapper = document.createElement('div');
@@ -392,7 +384,7 @@
               document.getElementById('bcw-messages').appendChild(wrapper);
               botMsgEl = wrapper;
             }
-            fullText += parsed.delta.text;
+            fullText += chunk;
             botBubble.textContent = fullText;
             scrollToBottom();
           }
