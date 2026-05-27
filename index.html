@@ -361,9 +361,13 @@
     }
     .pipeline-nodes {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       margin-bottom: 12px;
+    }
+    @media (max-width: 768px) and (min-width: 481px) {
+      .pipeline-nodes { grid-template-columns: repeat(2, 1fr); }
+      .pipeline-node:nth-child(2)::after { display: none; }
     }
     .pipeline-node {
       background: var(--surface);
@@ -457,8 +461,9 @@
       .contact-block { padding: 28px 20px; }
       .project-card { padding: 24px; }
       .pipeline-nodes { grid-template-columns: 1fr; }
-      .pipeline-node::after { content: '↓'; right: 50%; top: auto; bottom: -16px; transform: translateX(50%); }
+      .pipeline-node::after { content: '↓'; right: 50%; top: auto; bottom: -16px; transform: translateX(50%); right: auto; left: 50%; }
       .pipeline-node:last-child::after { display: none; }
+      .pipeline-node:nth-child(2)::after { display: block; }
       .overseer-connector { display: none; }
       .cp-node { min-width: 72px; }
       .cp-label, .cp-sub { white-space: normal; }
@@ -650,11 +655,18 @@
           </div>
           <div class="pipeline-node">
             <div class="pn-tag">Agent 03</div>
-            <div class="pn-title">Builder <span style="font-size:0.7rem;font-weight:500;color:var(--accent2);background:rgba(124,106,247,0.12);border:1px solid rgba(124,106,247,0.25);border-radius:4px;padding:2px 7px;margin-left:6px;vertical-align:middle;">via Claude Code</span></div>
-            <div class="pn-desc">Executes the plan task by task using Claude Code for all implementation. Each step verified before moving to the next. Emits a structured signal when the build is ready for review.</div>
+            <div class="pn-title">Builder</div>
+            <div class="pn-desc">Executes the plan task by task — writes files, wires up logic, structures the full architecture. Handles ~80% of the implementation and hands off a verified skeleton to Claude Code.</div>
+          </div>
+          <div class="pipeline-node">
+            <div class="pn-tag">Claude Code</div>
+            <div class="pn-title">Claude Code</div>
+            <div class="pn-desc">Picks up where the Builder leaves off — hardens the implementation, resolves edge cases, runs verification steps, and signals the pipeline when the build is fully complete.</div>
           </div>
         </div>
         <div class="overseer-connector">
+          <div class="overseer-tick"></div>
+          <div class="overseer-tick"></div>
           <div class="overseer-tick"></div>
           <div class="overseer-tick"></div>
           <div class="overseer-tick"></div>
