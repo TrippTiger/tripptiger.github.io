@@ -469,6 +469,29 @@
       .cp-label, .cp-sub { white-space: normal; }
     }
 
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      padding: 10px 20px;
+      border-radius: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 999;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
   </style>
 </head>
 <body>
@@ -477,7 +500,7 @@
   <nav>
     <div class="container">
       <span class="wordmark">Aaron <span>Screws</span></span>
-      <a href="mailto:aaronscrews@proton.me" class="cta">aaronscrews@proton.me</a>
+      <a href="mailto:aaronscrews@proton.me" class="cta" data-copy="aaronscrews@proton.me">aaronscrews@proton.me</a>
     </div>
   </nav>
 
@@ -669,7 +692,7 @@
       <div class="contact-block">
         <h2>Got something to build?</h2>
         <p>Describe what you need — I'll scope it and give you a straight answer on timeline and cost.</p>
-        <a href="mailto:aaronscrews@proton.me" class="email-link">aaronscrews@proton.me</a>
+        <a href="mailto:aaronscrews@proton.me" class="email-link" data-copy="aaronscrews@proton.me">aaronscrews@proton.me</a>
       </div>
     </div>
   </section>
@@ -690,6 +713,26 @@
   <link rel="stylesheet" href="chat-widget.css?v=4">
   <script src="chat-widget.js?v=4"></script>
 
+  <div id="toast">Email copied!</div>
+
+  <script>
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    document.querySelectorAll('[data-copy]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        navigator.clipboard.writeText(el.dataset.copy).then(() => {
+          clearTimeout(toastTimer);
+          toast.classList.add('show');
+          toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+        }).catch(() => {
+          // clipboard failed — let the mailto: href fire naturally
+          window.location.href = el.href;
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
